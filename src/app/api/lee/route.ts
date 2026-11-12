@@ -31,21 +31,27 @@ export async function POST(request: Request) {
     snapshot = `Jobs:\n${jobLines}\nStock requests:\n${stockLines}`
   }
 
-  const apiKey = process.env.XAI_API_KEY
+  const deepseekKey = process.env.DEEPSEEK_API_KEY
+  const xaiKey = process.env.XAI_API_KEY
+  const apiKey = deepseekKey || xaiKey
   if (!apiKey) {
     return NextResponse.json({
       text: `I can see the AGS workspace, but the model is not switched on for this site yet.\n\n${snapshot}`,
     })
   }
 
-  const res = await fetch('https://api.x.ai/v1/chat/completions', {
+  const base = (process.env.DEEPSEEK_BASE_URL || (deepseekKey ? 'https://api.deepseek.com' : 'https://api.x.ai/v1')).replace(/\/$/, '')
+  const model = deepseekKey ? 'deepseek-chat' : 'grok-4.5'
+  const endpoint = base.endsWith('/v1') ? `${base}/chat/completions` : `${base}/chat/completions`
+
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'grok-4.5',
+      model,
       max_tokens: 400,
       temperature: 0.4,
       messages: [
