@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useParams, useRouter } from 'next/navigation'
 
-export default function ReportPage() {
+function ReportForm() {
   const { id } = useParams()
   const router = useRouter()
   const supabase = createClient()
@@ -17,7 +17,6 @@ export default function ReportPage() {
     e.preventDefault()
     setLoading(true)
 
-    // Create progress report
     const { data: report, error } = await supabase
       .from('progress_reports')
       .insert({
@@ -34,7 +33,6 @@ export default function ReportPage() {
       return
     }
 
-    // Upload photos
     for (const photo of photos) {
       const path = `${id}/${Date.now()}-${photo.name}`
       const { error: uploadError } = await supabase.storage
@@ -55,60 +53,70 @@ export default function ReportPage() {
   }
 
   return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium mb-1">Status</label>
+        <select
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          className="w-full p-3 border rounded-lg"
+        >
+          <option value="arrived">Arrived</option>
+          <option value="in_progress">In Progress</option>
+          <option value="waiting">Waiting for Material</option>
+          <option value="complete">Complete</option>
+          <option value="issue">Issue</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Notes</label>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full p-3 border rounded-lg"
+          rows={4}
+          placeholder="What was done / any issues..."
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Photos</label>
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          multiple
+          onChange={(e) => setPhotos(Array.from(e.target.files || []))}
+          className="w-full"
+        />
+        {photos.length > 0 && (
+          <p className="text-sm text-gray-600 mt-1">{photos.length} photo(s) selected</p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-green-600 text-white py-4 rounded-lg font-medium disabled:opacity-50"
+      >
+        {loading ? 'Saving...' : 'Submit Report'}
+      </button>
+    </form>
+  )
+}
+
+export default function ReportPage() {
+  const router = useRouter()
+
+  return (
     <main className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-4">Report Progress</h1>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Status</label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-            >
-              <option value="arrived">Arrived</option>
-              <option value="in_progress">In Progress</option>
-              <option value="waiting">Waiting for Material</option>
-              <option value="complete">Complete</option>
-              <option value="issue">Issue</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Notes</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full p-3 border rounded-lg"
-              rows={4}
-              placeholder="What was done / any issues..."
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Photos</label>
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              multiple
-              onChange={(e) => setPhotos(Array.from(e.target.files || []))}
-              className="w-full"
-            />
-            {photos.length > 0 && (
-              <p className="text-sm text-gray-600 mt-1">{photos.length} photo(s) selected</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 text-white py-4 rounded-lg font-medium disabled:opacity-50"
-          >
-            {loading ? 'Saving...' : 'Submit Report'}
-          </button>
-        </form>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ReportForm />
+        </Suspense>
 
         <button onClick={() => router.back()} className="block text-center mt-4 text-blue-600 w-full">
           ← Back
