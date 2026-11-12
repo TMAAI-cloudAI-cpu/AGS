@@ -32,6 +32,8 @@ export default function AdminPage() {
   const [form, setForm] = useState(empty)
   const [loading, setLoading] = useState(false)
   const [note, setNote] = useState('')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [edit, setEdit] = useState(empty)
 
   async function load() {
     const { data, error } = await supabase
@@ -87,7 +89,57 @@ export default function AdminPage() {
       setNote(error.message)
       return
     }
+    if (editingId === id) setEditingId(null)
     setPeople((current) => current.filter((person) => person.id !== id))
+  }
+
+  function startEdit(person: Staff) {
+    setEditingId(person.id)
+    setEdit({
+      full_name: person.full_name,
+      cell_number: person.cell_number,
+      id_number: person.id_number ?? '',
+      address: person.address ?? '',
+      access: person.access,
+      pin: person.pin,
+      comments: person.comments ?? '',
+    })
+    setNote('')
+  }
+
+  function setEditField<K extends keyof typeof empty>(key: K, value: (typeof empty)[K]) {
+    setEdit((current) => ({ ...current, [key]: value }))
+  }
+
+  async function saveEdit(event: FormEvent) {
+    event.preventDefault()
+    if (!editingId) return
+    const pin = edit.pin.trim()
+    if (!/^\d{4,6}$/.test(pin)) {
+      setNote('PIN must be 4 to 6 digits.')
+      return
+    }
+    setLoading(true)
+    const { error } = await supabase
+      .from('staff')
+      .update({
+        full_name: edit.full_name.trim(),
+        cell_number: canonicalCell(edit.cell_number),
+        id_number: edit.id_number.trim() || null,
+        address: edit.address.trim() || null,
+        access: edit.access,
+        pin,
+        comments: edit.comments.trim() || null,
+      })
+      .eq('id', editingId)
+    setLoading(false)
+    if (error) {
+      setNote(error.message)
+      return
+    }
+    setEditingId(null)
+    setNote('Updated.')
+    await load()
   }
 
   return (
@@ -186,18 +238,63 @@ export default function AdminPage() {
                 </span>
               </div>
               <dl className="mt-3 space-y-1 text-sm text-gray-400">
-                {person.id_number && <div>ID {person.id_number}</div>}
-                {person.address && <div>{person.address}</div>}
+                <div>ID {person.id_number || 'not added'}</div>
+                <div>{person.address || 'Address not added'}</div>
                 <div>PIN {person.pin}</div>
                 {person.comments && <div className="text-gray-500">{person.comments}</div>}
               </dl>
-              <button
-                type="button"
-                onClick={() => remove(person.id)}
-                className="mt-3 text-sm text-gray-500 hover:text-white"
-              >
-                Remove
-              </button>
+              {editingId === person.id ? (
+                <form onSubmit={saveEdit} className="mt-4 space-y-3">
+                  <Field label="Name">
+                    <input required value={edit.full_name} onChange={(event) => setEditField('full_name', event.target.value)} className={inputClass} />
+                  </Field>
+                  <Field label="Cell number">
+                    <input required inputMode="tel" value={edit.cell_number} onChange={(event) => setEditField('cell_number', event.target.value)} className={inputClass} />
+                  </Field>
+                  <Field label="ID number">
+                    <input value={edit.id_number} onChange={(event) => setEditField('id_number', event.target.value)} className={inputClass} />
+                  </Field>
+                  <Field label="Address">
+                    <input value={edit.address} onChange={(event) => setEditField('address', event.target.value)} className={inputClass} />
+                  </Field>
+                  <Field label="Access">
+                    <select value={edit.access} onChange={(event) => setEditField('access', event.target.value as 'full' | 'staff')} className={inputClass}>
+                      <option value="full">Full</option>
+                      <option value="staff">Staff</option>
+                    </select>
+                  </Field>
+                  <Field label="PIN">
+                    <input
+                      required
+                      inputMode="numeric"
+                      autoComplete="off"
+                      value={edit.pin}
+                      onChange={(event) => setEditField('pin', event.target.value.replace(/\D/g, '').slice(0, 6))}
+                      className={inputClass}
+                    />
+                  </Field>
+                  <Field label="Comments">
+                    <textarea value={edit.comments} onChange={(event) => setEditField('comments', event.target.value)} className={inputClass} rows={3} />
+                  </Field>
+                  <div className="flex gap-2">
+                    <button type="submit" disabled={loading} className="flex-1 bg-white text-gray-900 py-3 rounded-xl font-medium disabled:opacity-50">
+                      {loading ? 'Saving...' : 'Save'}
+                    </button>
+                    <button type="button" onClick={() => setEditingId(null)} className="flex-1 border border-[#3a3d40] text-white py-3 rounded-xl">
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="mt-3 flex gap-4">
+                  <button type="button" onClick={() => startEdit(person)} className="text-sm text-white">
+                    Edit
+                  </button>
+                  <button type="button" onClick={() => remove(person.id)} className="text-sm text-gray-500 hover:text-white">
+                    Remove
+                  </button>
+                </div>
+              )}
             </article>
           ))}
         </div>
