@@ -24,7 +24,7 @@ export default function Home() {
             My Jobs
           </Link>
           <Link
-            href="/jobs"
+            href="/jobs?action=report"
             className="block w-full bg-white text-gray-900 text-center py-4 rounded-xl font-medium shadow-lg hover:bg-gray-100 transition"
           >
             Report Progress
