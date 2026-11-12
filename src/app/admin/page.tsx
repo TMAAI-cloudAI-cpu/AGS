@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { canonicalCell } from '@/lib/session'
 
 type Staff = {
   id: string
@@ -63,7 +64,7 @@ export default function AdminPage() {
     setLoading(true)
     const { error } = await supabase.from('staff').insert({
       full_name: form.full_name.trim(),
-      cell_number: form.cell_number.trim(),
+      cell_number: canonicalCell(form.cell_number),
       id_number: form.id_number.trim() || null,
       address: form.address.trim() || null,
       access: form.access,
