@@ -103,7 +103,7 @@ export default function AdsPage() {
         {image && (
           <div className="mt-6">
             <img src={image} alt="AGS ad" className="w-full rounded-xl border border-[#3a3d40]" />
-            <a href={image} download="ags-ad.jpg" className="block text-center mt-4 text-white">
+            <a href={image} download="ags-ad.png" className="block text-center mt-4 text-white">
               Download
             </a>
           </div>
