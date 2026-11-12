@@ -47,6 +47,12 @@ export default function Home() {
           >
             Lee
           </Link>
+          <Link
+            href="/admin"
+            className="block w-full bg-white text-gray-900 text-center py-4 rounded-xl font-medium shadow-lg hover:bg-gray-100 transition"
+          >
+            Admin
+          </Link>
         </div>
       </div>
     </main>
