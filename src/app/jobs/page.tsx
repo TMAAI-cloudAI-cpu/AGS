@@ -20,29 +20,33 @@ export default function JobsPage() {
   }, [])
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4">
+    <main className="min-h-screen bg-[#1a1c1e] p-4">
       <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-4">My Jobs</h1>
+        <h1 className="text-2xl font-semibold text-white mb-6">My Jobs</h1>
         <div className="space-y-3">
           {jobs.length === 0 && (
-            <p className="text-gray-500 text-center py-8">No jobs yet</p>
+            <div className="bg-[#25282b] border border-[#3a3d40] rounded-xl p-8 text-center text-gray-400">
+              No jobs yet
+            </div>
           )}
           {jobs.map((job) => (
             <Link
               key={job.id}
               href={`/report/${job.id}`}
-              className="block bg-white p-4 rounded-lg shadow border"
+              className="block bg-[#25282b] border border-[#3a3d40] p-4 rounded-xl hover:border-gray-500 transition"
             >
-              <div className="font-medium">{job.title}</div>
-              <div className="text-sm text-gray-600">{job.customer_name}</div>
+              <div className="font-medium text-white">{job.title}</div>
+              <div className="text-sm text-gray-400 mt-1">{job.customer_name}</div>
               <div className="text-sm text-gray-500">{job.address}</div>
-              <div className="mt-2 text-xs inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded">
+              <div className="mt-3 text-xs inline-block px-2.5 py-1 bg-white/10 text-gray-200 rounded-full">
                 {job.status}
               </div>
             </Link>
           ))}
         </div>
-        <Link href="/" className="block text-center mt-6 text-blue-600">← Back</Link>
+        <Link href="/" className="block text-center mt-8 text-gray-400 hover:text-white">
+          ← Back
+        </Link>
       </div>
     </main>
   )

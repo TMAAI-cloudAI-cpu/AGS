@@ -33,40 +33,40 @@ export default function RequestPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4">
+    <main className="min-h-screen bg-[#1a1c1e] p-4">
       <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Request Stock / Tools</h1>
+        <h1 className="text-2xl font-semibold text-white mb-6">Request Stock / Tools</h1>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-1">Item</label>
+            <label className="block text-sm text-gray-300 mb-1.5">Item</label>
             <input
               type="text"
               value={item}
               onChange={(e) => setItem(e.target.value)}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 bg-[#25282b] border border-[#3a3d40] rounded-xl text-white placeholder-gray-500"
               placeholder="e.g. Aluminium profile, glass, drill..."
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Quantity</label>
+            <label className="block text-sm text-gray-300 mb-1.5">Quantity</label>
             <input
               type="text"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 bg-[#25282b] border border-[#3a3d40] rounded-xl text-white placeholder-gray-500"
               placeholder="e.g. 6m, 2 sheets, 1"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Urgency</label>
+            <label className="block text-sm text-gray-300 mb-1.5">Urgency</label>
             <select
               value={urgency}
               onChange={(e) => setUrgency(e.target.value)}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 bg-[#25282b] border border-[#3a3d40] rounded-xl text-white"
             >
               <option value="low">Low</option>
               <option value="normal">Normal</option>
@@ -75,11 +75,11 @@ export default function RequestPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Notes</label>
+            <label className="block text-sm text-gray-300 mb-1.5">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 bg-[#25282b] border border-[#3a3d40] rounded-xl text-white placeholder-gray-500"
               rows={3}
             />
           </div>
@@ -87,13 +87,13 @@ export default function RequestPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-600 text-white py-4 rounded-lg font-medium disabled:opacity-50"
+            className="w-full bg-white text-gray-900 py-4 rounded-xl font-medium disabled:opacity-50"
           >
             {loading ? 'Sending...' : 'Submit Request'}
           </button>
         </form>
 
-        <button onClick={() => router.back()} className="block text-center mt-4 text-blue-600 w-full">
+        <button onClick={() => router.back()} className="block text-center mt-6 text-gray-400 hover:text-white w-full">
           ← Back
         </button>
       </div>

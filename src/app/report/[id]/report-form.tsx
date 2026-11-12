@@ -54,17 +54,17 @@ export default function ReportForm() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4">
+    <main className="min-h-screen bg-[#1a1c1e] p-4">
       <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Report Progress</h1>
+        <h1 className="text-2xl font-semibold text-white mb-6">Report Progress</h1>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-1">Status</label>
+            <label className="block text-sm text-gray-300 mb-1.5">Status</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 bg-[#25282b] border border-[#3a3d40] rounded-xl text-white"
             >
               <option value="arrived">Arrived</option>
               <option value="in_progress">In Progress</option>
@@ -75,41 +75,41 @@ export default function ReportForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Notes</label>
+            <label className="block text-sm text-gray-300 mb-1.5">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full p-3 border rounded-lg"
+              className="w-full p-3 bg-[#25282b] border border-[#3a3d40] rounded-xl text-white placeholder-gray-500"
               rows={4}
               placeholder="What was done / any issues..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Photos</label>
+            <label className="block text-sm text-gray-300 mb-1.5">Photos</label>
             <input
               type="file"
               accept="image/*"
               capture="environment"
               multiple
               onChange={(e) => setPhotos(Array.from(e.target.files || []))}
-              className="w-full"
+              className="w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-white file:text-gray-900"
             />
             {photos.length > 0 && (
-              <p className="text-sm text-gray-600 mt-1">{photos.length} photo(s) selected</p>
+              <p className="text-sm text-gray-400 mt-2">{photos.length} photo(s) selected</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 text-white py-4 rounded-lg font-medium disabled:opacity-50"
+            className="w-full bg-white text-gray-900 py-4 rounded-xl font-medium disabled:opacity-50"
           >
             {loading ? 'Saving...' : 'Submit Report'}
           </button>
         </form>
 
-        <button onClick={() => router.back()} className="block text-center mt-4 text-blue-600 w-full">
+        <button onClick={() => router.back()} className="block text-center mt-6 text-gray-400 hover:text-white w-full">
           ← Back
         </button>
       </div>
