@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { Gate } from "@/components/gate";
 
@@ -11,7 +12,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen bg-[#1a1c1e] text-gray-100">
-        <Gate>{children}</Gate>
+        <Suspense fallback={<main className="min-h-screen bg-[#1a1c1e]" />}>
+          <Gate>{children}</Gate>
+        </Suspense>
       </body>
     </html>
   );
