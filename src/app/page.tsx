@@ -11,6 +11,7 @@ const LINKS = [
   { href: '/jobs?action=report', label: 'Report Progress', fullOnly: false },
   { href: '/request', label: 'Request Stock / Tools', fullOnly: false },
   { href: '/sage', label: 'Sage', fullOnly: true },
+  { href: '/ads', label: 'Ads', fullOnly: true },
   { href: '/lee', label: 'Lee', fullOnly: false },
   { href: '/admin', label: 'Admin', fullOnly: true },
 ]

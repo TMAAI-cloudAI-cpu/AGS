@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { readSession } from '@/lib/session'
 
-const FULL_ONLY = ['/admin', '/sage']
+const FULL_ONLY = ['/admin', '/sage', '/ads']
 
 export function Gate({ children }: { children: ReactNode }) {
   const path = usePathname()
