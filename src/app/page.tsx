@@ -35,6 +35,18 @@ export default function Home() {
           >
             Request Stock / Tools
           </Link>
+          <Link
+            href="/sage"
+            className="block w-full bg-white text-gray-900 text-center py-4 rounded-xl font-medium shadow-lg hover:bg-gray-100 transition"
+          >
+            Sage
+          </Link>
+          <Link
+            href="/lee"
+            className="block w-full bg-white text-gray-900 text-center py-4 rounded-xl font-medium shadow-lg hover:bg-gray-100 transition"
+          >
+            Lee
+          </Link>
         </div>
       </div>
     </main>
